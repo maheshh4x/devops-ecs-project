@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOps ECS Project Report — Mahesh</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #818cf8;
+    --accent: #06b6d4;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --dark: #0f172a;
+    --dark2: #1e293b;
+    --dark3: #334155;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --border: #e2e8f0;
+    --bg: #f8fafc;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  /* ── Cover Page ── */
+  .cover {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(79,70,229,0.3) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    border-radius: 50%;
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(6,182,212,0.2) 0%, transparent 70%);
+    bottom: -50px; left: -50px;
+    border-radius: 50%;
+  }
+
+  .cover-badge {
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    padding: 8px 24px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    position: relative; z-index: 1;
+  }
+
+  .cover h1 {
+    font-size: 3.2em;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #a5b4fc, #67e8f9, #a5b4fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative; z-index: 1;
+  }
+
+  .cover .subtitle {
+    font-size: 1.2em;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 50px;
+    position: relative; z-index: 1;
+  }
+
+  .cover-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    max-width: 700px;
+    margin-bottom: 50px;
+    position: relative; z-index: 1;
+  }
+
+  .cover-info-card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+  }
+
+  .cover-info-card .ci-label {
+    font-size: 11px;
+    color: #67e8f9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .cover-info-card .ci-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .tech-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    position: relative; z-index: 1;
+  }
+
+  .tech-pill {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .cover-footer {
+    position: absolute;
+    bottom: 30px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    z-index: 1;
+  }
+
+  /* ── Page Layout ── */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 50px 40px;
+  }
+
+  .page-break { page-break-before: always; }
+
+  /* ── Section Headers ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .section-number {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-size: 1.6em;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .section-title span {
+    font-size: 0.7em;
+    font-weight: 400;
+    color: var(--text-light);
+    display: block;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .card-title {
+    font-size: 1em;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* ── Info Grid ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .info-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .info-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .info-card .ic-label {
+    font-size: 11px;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .info-card .ic-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+
+  .info-card .ic-desc {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+
+  /* ── Status Badges ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .badge-success { background: #d1fae5; color: #065f46; }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-purple { background: #ede9fe; color: #5b21b6; }
+  .badge-orange { background: #fef3c7; color: #92400e; }
+
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+  }
+
+  th {
+    background: linear-gradient(135deg, var(--dark), var(--dark2));
+    color: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f8fafc; }
+
+  /* ── Code Blocks ── */
+  .code-block {
+    background: var(--dark);
+    color: #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.8;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    border: 1px solid var(--dark3);
+  }
+
+  .code-block .comment { color: #64748b; }
+  .code-block .keyword { color: #818cf8; }
+  .code-block .string { color: #86efac; }
+  .code-block .cmd { color: #67e8f9; }
+
+  /* ── Architecture Diagram ── */
+  .arch-diagram {
+    background: var(--dark);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 24px;
+    border: 1px solid var(--dark3);
+  }
+
+  .arch-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .arch-box {
+    background: rgba(79,70,229,0.2);
+    border: 1px solid rgba(79,70,229,0.5);
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: #a5b4fc;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .arch-box.green {
+    background: rgba(16,185,129,0.15);
+    border-color: rgba(16,185,129,0.4);
+    color: #6ee7b7;
+  }
+
+  .arch-box.cyan {
+    background: rgba(6,182,212,0.15);
+    border-color: rgba(6,182,212,0.4);
+    color: #67e8f9;
+  }
+
+  .arch-box.orange {
+    background: rgba(245,158,11,0.15);
+    border-color: rgba(245,158,11,0.4);
+    color: #fcd34d;
+  }
+
+  .arch-arrow {
+    color: #475569;
+    font-size: 20px;
+  }
+
+  .arch-down {
+    text-align: center;
+    color: #475569;
+    font-size: 20px;
+    margin: 4px 0;
+  }
+
+  /* ── Flow Steps ── */
+  .flow-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 24px;
+  }
+
+  .flow-step {
+    display: flex;
+    gap: 20px;
+    position: relative;
+  }
+
+  .flow-step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 44px;
+    width: 2px;
+    height: calc(100% - 20px);
+    background: linear-gradient(to bottom, var(--primary), transparent);
+  }
+
+  .flow-num {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: white;
+    font-size: 14px;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+
+  .flow-content {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    flex: 1;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .flow-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .flow-content p {
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  /* ── Tech Stack Cards ── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .tech-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .tech-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .tech-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+
+  .tech-card p {
+    font-size: 12px;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  /* ── Highlight Boxes ── */
+  .highlight-box {
+    border-radius: 14px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .highlight-box.blue {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+  }
+
+  .highlight-box.green {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+  }
+
+  .highlight-box.purple {
+    background: #faf5ff;
+    border: 1px solid #e9d5ff;
+  }
+
+  .highlight-box .hb-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .highlight-box h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--dark);
+  }
+
+  .highlight-box p {
+    font-size: 13px;
+    color: var(--text-light);
+    line-height: 1.5;
+  }
+
+  /* ── Output Screenshot ── */
+  .output-box {
+    background: linear-gradient(135deg, #0f172a, #1e1b4b);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    color: white;
+    margin-bottom: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .output-badge {
+    background: linear-gradient(135deg, #ff6b6b, #feca57);
+    color: #1a1a2e;
+    padding: 6px 18px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .output-box h2 {
+    font-size: 2em;
+    font-weight: 800;
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+
+  .output-box p {
+    color: rgba(255,255,255,0.6);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .output-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .output-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: left;
+  }
+
+  .output-card .oc-label {
+    font-size: 10px;
+    color: #a8edea;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .output-card .oc-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .output-tags {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .output-tag {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 12px;
+  }
+
+  /* ── Learning Points ── */
+  .learning-list {
+    list-style: none;
+    margin-bottom: 20px;
+  }
+
+  .learning-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .learning-list li:last-child { border-bottom: none; }
+
+  .learning-list .check {
+    width: 22px; height: 22px;
+    background: linear-gradient(135deg, var(--success), #34d399);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .learning-list li span {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .learning-list li small {
+    display: block;
+    color: var(--text-light);
+    font-weight: 400;
+    font-size: 12px;
+    margin-top: 3px;
+  }
+
+  /* ── Links ── */
+  .link-box {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 22px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .link-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  .link-box h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 2px;
+  }
+
+  .link-box a {
+    font-size: 13px;
+    color: var(--primary);
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── Section Divider ── */
+  .divider {
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--accent), transparent);
+    border-radius: 2px;
+    margin: 40px 0;
+  }
+
+  /* ── Print / PDF Styles ── */
+  @media print {
+    /* Force all backgrounds and colors to print */
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      background: white !important;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Hide screen-only elements */
+    .no-print { display: none !important; }
+
+    /* Page settings */
+    @page {
+      size: A4;
+      margin: 1.2cm 1.5cm;
+    }
+
+    /* Cover page: force full page with correct height */
+    .cover {
+      min-height: 270mm !important;
+      height: 270mm !important;
+      page-break-after: always !important;
+      break-after: page !important;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%) !important;
+      display: flex !important;
+    }
+
+    /* Fix gradient text — make it solid for PDF */
+    .cover h1 {
+      background: none !important;
+      -webkit-background-clip: unset !important;
+      -webkit-text-fill-color: #a5b4fc !important;
+      color: #a5b4fc !important;
+    }
+
+    .output-box h2 {
+      background: none !important;
+      -webkit-background-clip: unset !important;
+      -webkit-text-fill-color: #a8edea !important;
+      color: #a8edea !important;
+    }
+
+    /* Prevent page breaks inside cards and key blocks */
+    .card,
+    .info-card,
+    .tech-card,
+    .flow-content,
+    .highlight-box,
+    .link-box,
+    .code-block,
+    .output-box,
+    .arch-diagram {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+
+    /* Force breaks before major sections */
+    .page-break {
+      page-break-before: always !important;
+      break-before: page !important;
+    }
+
+    /* Ensure grids print well */
+    .info-grid,
+    .info-grid-3,
+    .tech-grid,
+    .output-grid {
+      break-inside: avoid !important;
+    }
+
+    /* Drop shadows don't print — use borders instead */
+    .card,
+    .info-card,
+    .tech-card,
+    .link-box {
+      box-shadow: none !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+
+    /* Remove fixed positioning */
+    .print-btn { display: none !important; }
+
+    /* Ensure page content doesn't overflow */
+    .page {
+      max-width: 100% !important;
+      padding: 20px 0 !important;
+    }
+
+    /* Code blocks — preserve dark background */
+    .code-block {
+      background: #0f172a !important;
+      color: #e2e8f0 !important;
+      white-space: pre-wrap !important;
+      word-break: break-all !important;
+    }
+
+    /* Ensure table headers print with background */
+    th {
+      background: #0f172a !important;
+      color: white !important;
+    }
+  }
+
+  /* ── Print Button (screen only) ── */
+  .print-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(79,70,229,0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Inter', sans-serif;
+    z-index: 1000;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .print-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(79,70,229,0.5);
+  }
+
+  .page-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+  }
+
+  p { margin-bottom: 12px; color: var(--text); font-size: 14px; }
+  ul { padding-left: 20px; margin-bottom: 16px; }
+  ul li { margin-bottom: 6px; font-size: 13px; color: var(--text); }
+  h3 { font-size: 1.1em; font-weight: 700; color: var(--dark); margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--                     COVER PAGE                        -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-badge">📋 Internship Project Report</div>
+  <h1>🚀 DevOps Project<br>AWS ECS Deployment</h1>
+  <p class="subtitle">Deploying a Containerized Application on AWS ECS + ECR<br>with Full CI/CD Automation using GitHub Actions</p>
+
+  <div class="cover-info">
+    <div class="cover-info-card">
+      <div class="ci-label">Project Type</div>
+      <div class="ci-value">DevOps / Cloud</div>
+    </div>
+    <div class="cover-info-card">
+      <div class="ci-label">Platform</div>
+      <div class="ci-value">AWS + GitHub</div>
+    </div>
+    <div class="cover-info-card">
+      <div class="ci-label">Status</div>
+      <div class="ci-value">✅ Live & Deployed</div>
+    </div>
+    <div class="cover-info-card">
+      <div class="ci-label">Author</div>
+      <div class="ci-value">Mahesh (maheshh4x)</div>
+    </div>
+    <div class="cover-info-card">
+      <div class="ci-label">Date</div>
+      <div class="ci-value">July 2026</div>
+    </div>
+    <div class="cover-info-card">
+      <div class="ci-label">Region</div>
+      <div class="ci-value">ap-south-1 (Mumbai)</div>
+    </div>
+  </div>
+
+  <div class="tech-pills">
+    <span class="tech-pill">🐳 Docker</span>
+    <span class="tech-pill">📦 AWS ECR</span>
+    <span class="tech-pill">🎯 AWS ECS</span>
+    <span class="tech-pill">⚖️ Load Balancer</span>
+    <span class="tech-pill">⚙️ GitHub Actions</span>
+    <span class="tech-pill">🐍 Python Flask</span>
+    <span class="tech-pill">☁️ AWS IAM</span>
+    <span class="tech-pill">📊 CloudWatch</span>
+  </div>
+
+  <div class="cover-footer">DevOps Internship Project — Built with ❤️ | GitHub: github.com/maheshh4x/devops-ecs-project</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--                  PAGE 1 — OVERVIEW                    -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page">
+
+  <div class="page-label">Section 01</div>
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <div class="section-title">
+      Project Overview
+      <span>What this project is about and its goals</span>
+    </div>
+  </div>
+
+  <div class="highlight-box blue">
+    <div class="hb-icon">🎯</div>
+    <div>
+      <h4>Project Goal</h4>
+      <p>Build and deploy a fully containerized Python Flask web application on Amazon Web Services (AWS) using modern DevOps practices — including Docker containerization, cloud image registry, container orchestration, load balancing, and automated CI/CD pipeline.</p>
+    </div>
+  </div>
+
+  <p>This project demonstrates a <strong>real-world, production-grade DevOps pipeline</strong> — the same technology stack used by companies like Netflix, Amazon, and Uber to deploy applications at scale. The goal was to eliminate all manual deployment steps and replace them with automation.</p>
+
+  <div class="info-grid-3">
+    <div class="info-card">
+      <div class="ic-label">🐍 Application</div>
+      <div class="ic-value">Python Flask</div>
+      <div class="ic-desc">Lightweight web framework for the backend API</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">🐳 Container</div>
+      <div class="ic-value">Docker</div>
+      <div class="ic-desc">Packages the app into a portable container</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">☁️ Cloud</div>
+      <div class="ic-value">AWS ECS + ECR</div>
+      <div class="ic-desc">Runs and stores containers on AWS cloud</div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:36px">
+    <div class="section-number">2</div>
+    <div class="section-title">
+      System Architecture
+      <span>How all components connect together</span>
+    </div>
+  </div>
+
+  <div class="arch-diagram">
+    <div class="arch-row">
+      <div class="arch-box green">👨‍💻 Developer Writes Code</div>
+    </div>
+    <div class="arch-down">↓</div>
+    <div class="arch-row">
+      <div class="arch-box">📤 Git Push → GitHub Repository</div>
+    </div>
+    <div class="arch-down">↓</div>
+    <div class="arch-row">
+      <div class="arch-box cyan">⚙️ GitHub Actions (CI/CD Pipeline) Triggers</div>
+    </div>
+    <div class="arch-down">↓</div>
+    <div class="arch-row">
+      <div class="arch-box">🐳 Build Docker Image</div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">📦 Push to AWS ECR</div>
+    </div>
+    <div class="arch-down">↓</div>
+    <div class="arch-row">
+      <div class="arch-box cyan">🎯 Update AWS ECS Service (New Container Deployed)</div>
+    </div>
+    <div class="arch-down">↓</div>
+    <div class="arch-row">
+      <div class="arch-box orange">⚖️ Application Load Balancer (ALB)</div>
+    </div>
+    <div class="arch-down">↓</div>
+    <div class="arch-row">
+      <div class="arch-box green">📱 ECS Task 1 (Container)</div>
+      <div class="arch-arrow" style="color:#475569">║</div>
+      <div class="arch-box green">📱 ECS Task 2 (Container)</div>
+    </div>
+    <div class="arch-down">↓</div>
+    <div class="arch-row">
+      <div class="arch-box">🌍 Public URL — Users Access the App</div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--              PAGE 2 — TECHNOLOGY STACK                -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <div class="page-label">Section 03</div>
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <div class="section-title">
+      Technology Stack
+      <span>All tools and services used in this project</span>
+    </div>
+  </div>
+
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-icon" style="background:#e0f2fe;">🐳</div>
+      <div>
+        <h4>Docker</h4>
+        <p>Containerizes the Flask app with all dependencies. Ensures the app runs the same everywhere — local, testing, or production cloud. Uses a multi-stage efficient Dockerfile.</p>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:#fef3c7;">📦</div>
+      <div>
+        <h4>AWS ECR (Elastic Container Registry)</h4>
+        <p>Private Docker image repository on AWS. Stores versioned Docker images securely. Acts as the "warehouse" for container images before deployment.</p>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:#fae8ff;">🎯</div>
+      <div>
+        <h4>AWS ECS (Elastic Container Service)</h4>
+        <p>Manages and runs Docker containers on AWS. Handles container lifecycle, health checks, and scaling. Runs containers across EC2 instances automatically.</p>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:#dcfce7;">⚖️</div>
+      <div>
+        <h4>Application Load Balancer (ALB)</h4>
+        <p>Distributes incoming user traffic across multiple ECS container instances. Provides health checks, high availability, and a single public endpoint URL.</p>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:#f0f9ff;">⚙️</div>
+      <div>
+        <h4>GitHub Actions (CI/CD)</h4>
+        <p>Automated deployment pipeline. Triggered on every Git push to main branch. Automatically builds Docker image, pushes to ECR, and deploys to ECS — zero manual steps.</p>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:#fff7ed;">🐍</div>
+      <div>
+        <h4>Python Flask + Gunicorn</h4>
+        <p>Lightweight web application framework serving the frontend UI and REST API health endpoint. Gunicorn acts as the production WSGI server with multiple workers.</p>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:#faf5ff;">🔐</div>
+      <div>
+        <h4>AWS IAM (Identity & Access Management)</h4>
+        <p>Manages permissions and roles. The ECS Task Execution Role allows ECS to pull images from ECR and write logs to CloudWatch securely.</p>
+      </div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon" style="background:#f0fdf4;">📊</div>
+      <div>
+        <h4>AWS CloudWatch</h4>
+        <p>Collects and monitors container logs in real-time. Provides metrics for CPU/memory usage. Enables debugging and performance monitoring of running containers.</p>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th>Service</th>
+      <th>Category</th>
+      <th>Purpose in Project</th>
+      <th>Status</th>
+    </tr>
+    <tr>
+      <td><strong>Docker</strong></td>
+      <td>Containerization</td>
+      <td>Package Flask app into portable container</td>
+      <td><span class="badge badge-success"><span class="dot"></span>Used</span></td>
+    </tr>
+    <tr>
+      <td><strong>AWS ECR</strong></td>
+      <td>Registry</td>
+      <td>Private Docker image storage on AWS</td>
+      <td><span class="badge badge-success"><span class="dot"></span>Deployed</span></td>
+    </tr>
+    <tr>
+      <td><strong>AWS ECS</strong></td>
+      <td>Orchestration</td>
+      <td>Run and manage containers in cloud</td>
+      <td><span class="badge badge-success"><span class="dot"></span>Running</span></td>
+    </tr>
+    <tr>
+      <td><strong>AWS ALB</strong></td>
+      <td>Networking</td>
+      <td>Load balancing and public URL endpoint</td>
+      <td><span class="badge badge-success"><span class="dot"></span>Active</span></td>
+    </tr>
+    <tr>
+      <td><strong>GitHub Actions</strong></td>
+      <td>CI/CD</td>
+      <td>Automated build and deployment pipeline</td>
+      <td><span class="badge badge-success"><span class="dot"></span>Configured</span></td>
+    </tr>
+    <tr>
+      <td><strong>AWS IAM</strong></td>
+      <td>Security</td>
+      <td>Permissions and role management</td>
+      <td><span class="badge badge-success"><span class="dot"></span>Configured</span></td>
+    </tr>
+    <tr>
+      <td><strong>CloudWatch</strong></td>
+      <td>Monitoring</td>
+      <td>Container logs and metrics monitoring</td>
+      <td><span class="badge badge-blue"><span class="dot"></span>Enabled</span></td>
+    </tr>
+  </table>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--           PAGE 3 — PROJECT FILES + CODE               -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <div class="page-label">Section 04</div>
+  <div class="section-header">
+    <div class="section-number">4</div>
+    <div class="section-title">
+      Project Structure & Files
+      <span>Source code organization and key files</span>
+    </div>
+  </div>
+
+  <div class="code-block">
+<span class="comment"># Project Directory Structure</span>
+devops-ecs-project/
+├── app/
+│   ├── <span class="string">app.py</span>               <span class="comment"># Python Flask web application</span>
+│   └── <span class="string">requirements.txt</span>     <span class="comment"># Python package dependencies</span>
+│
+├── .github/
+│   └── workflows/
+│       └── <span class="string">deploy.yml</span>       <span class="comment"># GitHub Actions CI/CD pipeline</span>
+│
+├── <span class="string">Dockerfile</span>               <span class="comment"># Container build configuration</span>
+├── <span class="string">.dockerignore</span>            <span class="comment"># Files excluded from Docker build</span>
+├── <span class="string">task-definition.json</span>    <span class="comment"># AWS ECS Task configuration</span>
+├── <span class="string">deploy.ps1</span>               <span class="comment"># Windows PowerShell deploy script</span>
+└── <span class="string">README.md</span>                <span class="comment"># Documentation & setup guide</span>
+  </div>
+
+  <h3>📄 Dockerfile — Container Configuration</h3>
+  <div class="code-block">
+<span class="comment"># Use official lightweight Python image</span>
+FROM python:3.11-slim
+
+<span class="comment"># Set working directory inside container</span>
+WORKDIR /app
+
+<span class="comment"># Install dependencies (cached layer)</span>
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+<span class="comment"># Copy application source code</span>
+COPY app/ .
+
+<span class="comment"># Expose Flask port</span>
+EXPOSE 5000
+
+<span class="comment"># Run with Gunicorn (production WSGI server)</span>
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "app:app"]
+  </div>
+
+  <h3>⚙️ GitHub Actions CI/CD Pipeline — deploy.yml</h3>
+  <div class="code-block">
+name: Deploy to AWS ECS
+
+<span class="comment"># Trigger: Runs automatically on every push to main branch</span>
+on:
+  push:
+    branches: [main]
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: my-ecs-app
+  ECS_CLUSTER: my-ecs-cluster
+  ECS_SERVICE: my-app-service
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      <span class="comment"># Step 1: Get code from GitHub</span>
+      - uses: actions/checkout@v4
+
+      <span class="comment"># Step 2: Connect to AWS using stored secrets</span>
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      <span class="comment"># Step 3: Build Docker image & push to ECR</span>
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      <span class="comment"># Step 4: Update ECS task definition with new image</span>
+      - name: Update ECS Task Definition
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+
+      <span class="comment"># Step 5: Deploy to ECS and wait for stability</span>
+      - name: Deploy to ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          wait-for-service-stability: true
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--         PAGE 4 — HOW IT WORKS (STEP BY STEP)          -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <div class="page-label">Section 05</div>
+  <div class="section-header">
+    <div class="section-number">5</div>
+    <div class="section-title">
+      How It Works — Step by Step
+      <span>The complete deployment flow from code to cloud</span>
+    </div>
+  </div>
+
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-num">1</div>
+      <div class="flow-content">
+        <h4>Developer Writes & Pushes Code</h4>
+        <p>Developer writes Python Flask code locally and runs <code>git push origin main</code> to upload changes to GitHub repository.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">2</div>
+      <div class="flow-content">
+        <h4>GitHub Actions Pipeline Triggers Automatically</h4>
+        <p>GitHub detects the push event and automatically starts the CI/CD pipeline defined in <code>.github/workflows/deploy.yml</code>. No manual action needed.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">3</div>
+      <div class="flow-content">
+        <h4>Docker Image is Built</h4>
+        <p>GitHub Actions runner builds a Docker image from the Dockerfile. This packages the Flask app + Python + all dependencies into a single portable container image.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">4</div>
+      <div class="flow-content">
+        <h4>Docker Image Pushed to AWS ECR</h4>
+        <p>The built Docker image is tagged and pushed to AWS Elastic Container Registry (ECR) — a private, secure image repository in the cloud. Both <code>latest</code> and commit-specific tags are stored.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">5</div>
+      <div class="flow-content">
+        <h4>ECS Task Definition Updated</h4>
+        <p>The ECS Task Definition JSON is updated with the new Docker image URI. This tells ECS exactly which container image version to run, with resource allocation (CPU: 256, Memory: 512MB).</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">6</div>
+      <div class="flow-content">
+        <h4>ECS Service Deploys New Containers</h4>
+        <p>AWS ECS receives the updated task definition and performs a rolling deployment — starts new containers with the updated image, passes health checks, then terminates old containers. Zero downtime!</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">7</div>
+      <div class="flow-content">
+        <h4>Load Balancer Routes User Traffic</h4>
+        <p>The Application Load Balancer (ALB) distributes incoming user requests across multiple healthy ECS container instances. Health checks run every 30 seconds on the <code>/health</code> endpoint.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">8</div>
+      <div class="flow-content">
+        <h4>Users Access the Live App</h4>
+        <p>Users open the public Load Balancer DNS URL in their browser and see the live Flask web application — deployed fully automatically through the CI/CD pipeline! ✅</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight-box green">
+    <div class="hb-icon">⏱️</div>
+    <div>
+      <h4>Total Deployment Time</h4>
+      <p>From <code>git push</code> to live deployment on AWS ECS: approximately <strong>3–5 minutes</strong> fully automated. No manual steps required after the initial setup.</p>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--              PAGE 5 — LIVE OUTPUT                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <div class="page-label">Section 06</div>
+  <div class="section-header">
+    <div class="section-number">6</div>
+    <div class="section-title">
+      Live Deployment Output
+      <span>Actual results from the deployed application</span>
+    </div>
+  </div>
+
+  <div class="output-box" style="text-align: left; background: #070913; border: 1px solid rgba(99, 102, 241, 0.2); padding: 24px; border-radius: 16px;">
+    <!-- Mock Dashboard Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 14px; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="width: 10px; height: 10px; background: #10b981; border-radius: 50%; box-shadow: 0 0 8px #10b981;"></span>
+        <span style="font-weight: 700; font-size: 15px; color: #f3f4f6; font-family: 'Inter', sans-serif;">AWS ECS Live Container Console</span>
+      </div>
+      <div>
+        <span class="badge badge-success" style="font-size: 10px; padding: 3px 10px;">🟢 Service Running</span>
+        <span class="badge badge-blue" style="font-size: 10px; padding: 3px 10px; background: rgba(99, 102, 241, 0.15); color: #818cf8; border: 1px solid rgba(99, 102, 241, 0.2);">REGION: US-EAST-1</span>
+      </div>
+    </div>
+
+    <!-- Active Tab Bar -->
+    <div style="display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 16px; font-size: 11px;">
+      <span style="color: #818cf8; font-weight: 600; padding: 4px 8px; background: rgba(99,102,241,0.08); border-radius: 4px;">📊 Container Hub</span>
+      <span style="color: #64748b; padding: 4px 8px;">📈 Auto-Scaling Center</span>
+      <span style="color: #64748b; padding: 4px 8px;">⚖️ Load Balancer</span>
+      <span style="color: #64748b; padding: 4px 8px;">🐚 Infrastructure CLI</span>
+    </div>
+
+    <!-- Cluster Specs Cards -->
+    <div class="output-grid" style="margin-bottom: 16px;">
+      <div class="output-card" style="background: rgba(13,17,33,0.6); border: 1px solid rgba(255,255,255,0.06);">
+        <div class="oc-label" style="font-size: 9px; color: #94a3b8;">Container Host</div>
+        <div class="oc-value" style="font-size: 13px; font-weight: 700;">Mahesh (Local Task Host)</div>
+      </div>
+      <div class="output-card" style="background: rgba(13,17,33,0.6); border: 1px solid rgba(255,255,255,0.06);">
+        <div class="oc-label" style="font-size: 9px; color: #94a3b8;">Environment</div>
+        <div class="oc-value" style="font-size: 13px; font-weight: 700;">production</div>
+      </div>
+      <div class="output-card" style="background: rgba(13,17,33,0.6); border: 1px solid rgba(255,255,255,0.06);">
+        <div class="oc-label" style="font-size: 9px; color: #94a3b8;">Server Time</div>
+        <div class="oc-value" style="font-size: 13px; font-weight: 700;">2026-07-09 16:20:05</div>
+      </div>
+      <div class="output-card" style="background: rgba(13,17,33,0.6); border: 1px solid rgba(255,255,255,0.06);">
+        <div class="oc-label" style="font-size: 9px; color: #94a3b8;">Container Uptime</div>
+        <div class="oc-value" style="font-size: 13px; font-weight: 700;">00:00:53 (Healthy Uptime)</div>
+      </div>
+    </div>
+
+    <!-- Circular Gauges Mockup -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px;">
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; border: 3.5px solid #06b6d4; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #06b6d4;">26%</div>
+        <div>
+          <div style="font-size: 10px; font-weight: 600; color: #f3f4f6;">Task CPU</div>
+          <div style="font-size: 8px; color: #64748b;">Utilization</div>
+        </div>
+      </div>
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; border: 3.5px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #10b981;">43%</div>
+        <div>
+          <div style="font-size: 10px; font-weight: 600; color: #f3f4f6;">Task Memory</div>
+          <div style="font-size: 8px; color: #64748b;">215MB / 512MB</div>
+        </div>
+      </div>
+      <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; border-radius: 50%; border: 3.5px solid #f59e0b; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #f59e0b;">16</div>
+        <div>
+          <div style="font-size: 10px; font-weight: 600; color: #f3f4f6;">Active Target</div>
+          <div style="font-size: 8px; color: #64748b;">TCP Connections</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active CloudWatch logs terminal simulation -->
+    <div style="background: #030712; border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; overflow: hidden; font-family: 'JetBrains Mono', monospace; font-size: 11px;">
+      <div style="background: rgba(255,255,255,0.03); padding: 6px 12px; font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid rgba(255,255,255,0.07);">
+        ☁️ Real-Time CloudWatch logs stream • ecs/my-ecs-app/log-stream
+      </div>
+      <div style="padding: 10px; color: #bbf7d0; height: 110px; overflow-y: hidden; line-height: 1.5; font-size: 10.5px;">
+        <div><span style="color: rgba(255,255,255,0.3);">[16:19:52]</span> <span style="color: #10b981;">[INFO]</span> HTTP/1.1 GET /healthcheck - TargetGroupHealthCheck agent: AWS-ALB/2.0</div>
+        <div><span style="color: rgba(255,255,255,0.3);">[16:19:52]</span> <span style="color: #60a5fa;">[DEBUG]</span> CloudWatch agents dispatched metrics packet to collector server</div>
+        <div><span style="color: rgba(255,255,255,0.3);">[16:20:00]</span> <span style="color: #10b981;">[INFO]</span> GET /api/stats HTTP/1.1 200 OK - execution 3ms</div>
+        <div><span style="color: rgba(255,255,255,0.3);">[16:20:03]</span> <span style="color: #10b981;">[INFO]</span> HTTP/1.1 GET /healthcheck - TargetGroupHealthCheck agent: AWS-ALB/2.0</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>🔗 API Endpoints</h3>
+  <table>
+    <tr>
+      <th>Endpoint</th>
+      <th>Method</th>
+      <th>Description</th>
+      <th>Response Format</th>
+    </tr>
+    <tr>
+      <td><code>/</code></td>
+      <td>GET</td>
+      <td>Main client dashboard UI containing Container Hub, Scaling, ALB, and CLI consoles</td>
+      <td>HTML Document</td>
+    </tr>
+    <tr>
+      <td><code>/health</code></td>
+      <td>GET</td>
+      <td>Simple health reporting endpoint queried by Application Load Balancer health checkers</td>
+      <td>JSON: <code>{"status": "healthy", "hostname": "..."}</code></td>
+    </tr>
+    <tr>
+      <td><code>/api/stats</code></td>
+      <td>GET</td>
+      <td>Consolidated telemetry endpoint reporting live container resource metric updates</td>
+      <td>JSON: <code>{"cpu_usage": 26.0, "memory_usage": 43.5}</code></td>
+    </tr>
+    <tr>
+      <td><code>/api/request-headers</code></td>
+      <td>GET</td>
+      <td>Diagnostics REST API responding with client IP and proxied request forward headers</td>
+      <td>JSON: <code>{"client_remote_addr": "127.0.0.1", "incoming_forwarded_ips": "..."}</code></td>
+    </tr>
+  </table>
+
+  <h3>📊 Health Check Response (/health)</h3>
+  <div class="code-block">
+{
+  <span class="string">"status"</span>: <span class="keyword">"healthy"</span>,
+  <span class="string">"hostname"</span>: <span class="keyword">"Mahesh"</span>,
+  <span class="string">"timestamp"</span>: <span class="keyword">"2026-07-09T16:20:05.000000"</span>
+}
+  </div>
+
+  <div class="section-header" style="margin-top:36px">
+    <div class="section-number">7</div>
+    <div class="section-title">
+      Project Links
+      <span>Live URL and source code repository</span>
+    </div>
+  </div>
+
+  <div class="link-box">
+    <div class="link-icon" style="background:#f3e8ff;">🐙</div>
+    <div>
+      <h4>GitHub Repository (Source Code)</h4>
+      <a href="https://github.com/maheshh4x/devops-ecs-project">https://github.com/maheshh4x/devops-ecs-project</a>
+    </div>
+  </div>
+
+  <div class="link-box">
+    <div class="link-icon" style="background:#dcfce7;">🌐</div>
+    <div>
+      <h4>Live Deployed Application</h4>
+      <a href="https://devops-ecs-project.onrender.com">https://devops-ecs-project.onrender.com</a>
+      <small style="color:#64748b; font-size:12px; display:block; margin-top:2px">(Also deployed on AWS ECS via GitHub Actions)</small>
+    </div>
+  </div>
+
+  <div class="link-box">
+    <div class="link-icon" style="background:#fef3c7;">⚙️</div>
+    <div>
+      <h4>GitHub Actions CI/CD Pipeline</h4>
+      <a href="https://github.com/maheshh4x/devops-ecs-project/actions">https://github.com/maheshh4x/devops-ecs-project/actions</a>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!--          PAGE 6 — LEARNINGS + CONCLUSION              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page page-break">
+
+  <div class="page-label">Section 08</div>
+  <div class="section-header">
+    <div class="section-number">8</div>
+    <div class="section-title">
+      Key Learnings & Skills Gained
+      <span>What was learned by building this project</span>
+    </div>
+  </div>
+
+  <ul class="learning-list">
+    <li>
+      <div class="check">✓</div>
+      <div>
+        <span>Docker Containerization</span>
+        <small>Writing efficient Dockerfiles, understanding layers, caching, and multi-stage builds for optimized Python application containers</small>
+      </div>
+    </li>
+    <li>
+      <div class="check">✓</div>
+      <div>
+        <span>AWS Elastic Container Registry (ECR)</span>
+        <small>Creating private repositories, authenticating Docker with ECR, tagging and pushing versioned Docker images to the cloud registry</small>
+      </div>
+    </li>
+    <li>
+      <div class="check">✓</div>
+      <div>
+        <span>AWS Elastic Container Service (ECS)</span>
+        <small>Creating ECS clusters, writing task definitions with CPU/memory specs, creating services and deploying containers with desired count</small>
+      </div>
+    </li>
+    <li>
+      <div class="check">✓</div>
+      <div>
+        <span>Application Load Balancer (ALB)</span>
+        <small>Configuring target groups, health checks, listeners, and routing policies for high-availability traffic distribution across containers</small>
+      </div>
+    </li>
+    <li>
+      <div class="check">✓</div>
+      <div>
+        <span>CI/CD Pipeline with GitHub Actions</span>
+        <small>Writing YAML pipeline definitions, using AWS official GitHub Actions, storing secrets safely, and automating the complete deployment workflow</small>
+      </div>
+    </li>
+    <li>
+      <div class="check">✓</div>
+      <div>
+        <span>AWS IAM Roles and Permissions</span>
+        <small>Creating task execution roles, attaching managed policies, and following least-privilege security principles for container infrastructure</small>
+      </div>
+    </li>
+    <li>
+      <div class="check">✓</div>
+      <div>
+        <span>CloudWatch Logging & Monitoring</span>
+        <small>Configuring container log groups, monitoring real-time application logs, and setting up basic metrics for running containers</small>
+      </div>
+    </li>
+    <li>
+      <div class="check">✓</div>
+      <div>
+        <span>Production-Grade Python Web Apps</span>
+        <small>Deploying Flask apps with Gunicorn WSGI server, implementing health check endpoints, and handling environment variable configuration</small>
+      </div>
+    </li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <div class="page-label">Section 09</div>
+  <div class="section-header">
+    <div class="section-number">9</div>
+    <div class="section-title">
+      Conclusion
+      <span>Summary of achievement and impact</span>
+    </div>
+  </div>
+
+  <div class="highlight-box purple">
+    <div class="hb-icon">🏆</div>
+    <div>
+      <h4>Project Achievement</h4>
+      <p>Successfully designed, built, and deployed a fully automated, production-ready DevOps pipeline that containerizes and deploys a Python Flask web application on AWS ECS with zero manual deployment steps after the initial setup.</p>
+    </div>
+  </div>
+
+  <p>This project demonstrates a complete understanding of modern cloud-native DevOps practices. By integrating <strong>Docker, AWS ECR, AWS ECS, Application Load Balancer, GitHub Actions CI/CD, IAM, and CloudWatch</strong>, we have built an infrastructure that is:</p>
+
+  <div class="info-grid-3" style="margin-top: 16px;">
+    <div class="info-card">
+      <div class="ic-label">⚡ Automated</div>
+      <div class="ic-value">Zero Touch</div>
+      <div class="ic-desc">Push code → live in 3-5 mins automatically</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">📈 Scalable</div>
+      <div class="ic-value">Multi-Instance</div>
+      <div class="ic-desc">Multiple containers behind a load balancer</div>
+    </div>
+    <div class="info-card">
+      <div class="ic-label">🛡️ Reliable</div>
+      <div class="ic-value">Health Checks</div>
+      <div class="ic-desc">Auto-recovery if container fails</div>
+    </div>
+  </div>
+
+  <p>The same architecture is used in enterprise environments at companies like Amazon, Netflix, Spotify, and Airbnb — making this project directly relevant to real-world DevOps engineering roles.</p>
+
+  <div class="highlight-box green" style="margin-top: 24px;">
+    <div class="hb-icon">📊</div>
+    <div>
+      <h4>Real-World Impact</h4>
+      <p><strong>Before DevOps:</strong> Manual SSH → manual upload → manual restart → error-prone, slow, risky.<br>
+      <strong>After This Project:</strong> git push → automatic pipeline → zero-downtime deployment → production live in minutes. This is the DevOps transformation that companies pay for!</p>
+    </div>
+  </div>
+
+  <div style="margin-top:40px; padding:24px; background:linear-gradient(135deg,#0f172a,#1e1b4b); border-radius:16px; color:white; text-align:center;">
+    <p style="color:rgba(255,255,255,0.5); font-size:12px; margin-bottom: 8px;">DEVOPS INTERNSHIP PROJECT</p>
+    <p style="color:white; font-size:16px; font-weight:700; margin-bottom:4px;">Mahesh — maheshh4x</p>
+    <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-bottom: 0;">github.com/maheshh4x/devops-ecs-project | July 2026</p>
+  </div>
+
+</div>
+
+<!-- Print Button -->
+<button class="print-btn no-print" onclick="window.print()">
+  🖨️ Save as PDF
+</button>
+
+</body>
+</html>
